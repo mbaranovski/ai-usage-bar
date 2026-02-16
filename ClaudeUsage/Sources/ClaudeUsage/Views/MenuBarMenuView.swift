@@ -5,6 +5,7 @@ import SwiftUI
 struct MenuBarMenuView: View {
     @ObservedObject var viewModel: UsageViewModel
     @ObservedObject var launchManager = LaunchAtLoginManager()
+    @State private var isClaudeExpanded = true
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -13,28 +14,8 @@ struct MenuBarMenuView: View {
 
             Divider()
 
-            // 5-Hour Window
-            usageSection(
-                title: "5-Hour Window",
-                utilization: viewModel.fiveHourUtilization,
-                resetInfo: "Resets in: \(viewModel.fiveHourTimeRemaining)",
-                level: viewModel.utilizationColor
-            )
-
-            Divider()
-
-            // 7-Day Window
-            usageSection(
-                title: "7-Day Window",
-                utilization: viewModel.sevenDayUtilization,
-                resetInfo: "Resets: \(viewModel.sevenDayResetsAt)",
-                level: utilizationLevel(for: viewModel.sevenDayUtilization)
-            )
-
-            Divider()
-
-            // Status Info
-            statusSection
+            // Claude Code Section (Collapsible)
+            claudeSection
 
             Divider()
 
@@ -42,17 +23,14 @@ struct MenuBarMenuView: View {
             actionsSection
         }
         .padding()
-        .frame(width: 280)
+        .frame(width: 300)
     }
 
     // MARK: - View Components
 
     private var headerSection: some View {
         HStack {
-            Image(systemName: "brain.head.profile")
-                .font(.title2)
-                .foregroundColor(.purple)
-            Text("Claude Code Usage")
+            Text("AI Subscription Usage")
                 .font(.headline)
             Spacer()
             if viewModel.isLoading {
@@ -60,6 +38,104 @@ struct MenuBarMenuView: View {
                     .scaleEffect(0.5)
             }
         }
+    }
+
+    private var claudeSection: some View {
+        DisclosureGroup(isExpanded: $isClaudeExpanded) {
+            VStack(alignment: .leading, spacing: 12) {
+                // Current session (5-hour)
+                usageSection(
+                    title: "Current session",
+                    utilization: viewModel.fiveHourUtilization,
+                    resetInfo: viewModel.fiveHourTimeRemaining,
+                    level: viewModel.utilizationColor
+                )
+
+                // Current week (all models)
+                usageSection(
+                    title: "Current week (all models)",
+                    utilization: viewModel.sevenDayUtilization,
+                    resetInfo: viewModel.sevenDayResetsAt,
+                    level: utilizationLevel(for: viewModel.sevenDayUtilization)
+                )
+
+                // Current week (Sonnet only)
+                usageSection(
+                    title: "Current week (Sonnet only)",
+                    utilization: viewModel.sonnetUtilization,
+                    resetInfo: viewModel.sonnetResetsAt,
+                    level: utilizationLevel(for: viewModel.sonnetUtilization)
+                )
+
+                // Extra usage
+                if viewModel.extraUsageIsEnabled {
+                    extraUsageSection
+                }
+            }
+            .padding(.leading, 8)
+        } label: {
+            Text("Claude Code")
+                .font(.subheadline)
+                .fontWeight(.semibold)
+        }
+    }
+
+    private var extraUsageSection: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Extra usage")
+                .font(.subheadline)
+                .fontWeight(.semibold)
+
+            GeometryReader { geometry in
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(Color.gray.opacity(0.2))
+                        .frame(height: 8)
+
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(colorForLevel(utilizationLevel(for: viewModel.extraUsageUtilization)))
+                        .frame(width: geometry.size.width * min(viewModel.extraUsageUtilization / 100, 1), height: 8)
+                }
+            }
+            .frame(height: 8)
+
+            HStack {
+                Text("\(Int(viewModel.extraUsageUtilization))% used")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Spacer()
+            }
+
+            Text("\(viewModel.extraUsageSpent) / \(viewModel.extraUsageLimit) spent")
+                .font(.caption)
+                .foregroundColor(.secondary)
+
+            Text(extraUsageResetDate)
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+    }
+
+    private var extraUsageResetDate: String {
+        let timeZone = TimeZone.current
+        let timeZoneName = timeZone.identifier
+
+        let calendar = Calendar.current
+        let now = Date()
+
+        let components = calendar.dateComponents([.year, .month], from: now)
+        var nextMonth = components
+        nextMonth.month! += 1
+
+        guard let resetDate = calendar.date(from: nextMonth) else {
+            return "--"
+        }
+
+        let formatter = DateFormatter()
+        formatter.timeZone = timeZone
+        formatter.dateFormat = "MMM d"
+
+        return "Resets \(formatter.string(from: resetDate)) (\(timeZoneName))"
     }
 
     private func usageSection(title: String, utilization: Double, resetInfo: String, level: UtilizationLevel) -> some View {
@@ -94,48 +170,8 @@ struct MenuBarMenuView: View {
         }
     }
 
-    private var statusSection: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            if let subscriptionType = viewModel.subscriptionType {
-                HStack {
-                    Image(systemName: "crown.fill")
-                        .foregroundColor(.yellow)
-                        .font(.caption)
-                    Text("Subscription: \(subscriptionType)")
-                        .font(.caption)
-                }
-            }
-
-            HStack {
-                Image(systemName: "clock")
-                    .foregroundColor(.secondary)
-                    .font(.caption)
-                Text("Last updated: \(viewModel.lastUpdatedText)")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-
-            if let error = viewModel.error {
-                HStack {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundColor(.red)
-                        .font(.caption)
-                    Text(error.localizedDescription)
-                        .font(.caption)
-                        .foregroundColor(.red)
-                        .lineLimit(2)
-                }
-            }
-        }
-    }
-
     private var actionsSection: some View {
-        VStack(spacing: 8) {
-            Button(action: openClaudeCode) {
-                Label("Open Claude Code", systemImage: "terminal")
-            }
-            .buttonStyle(.plain)
-
+        VStack(alignment: .leading, spacing: 8) {
             Toggle("Launch at Login", isOn: $launchManager.isEnabled)
                 .toggleStyle(.checkbox)
 
@@ -161,13 +197,6 @@ struct MenuBarMenuView: View {
         if value >= 80 { return .critical }
         if value >= 50 { return .warning }
         return .normal
-    }
-
-    private func openClaudeCode() {
-        let task = Process()
-        task.executableURL = URL(fileURLWithPath: "/usr/bin/open")
-        task.arguments = ["-a", "Terminal"]
-        try? task.run()
     }
 }
 
