@@ -83,6 +83,13 @@ class UsageViewModel: ObservableObject {
         usageResponse?.fiveHour?.formattedTimeRemaining ?? "--"
     }
 
+    var fiveHourTimeRemainingFormatted: String {
+        guard let date = usageResponse?.fiveHour?.resetsAtDate else {
+            return "--"
+        }
+        return date.formattedResetTime()
+    }
+
     // Current week (all models)
     var sevenDayUtilization: Double {
         usageResponse?.sevenDay?.utilization ?? 0
