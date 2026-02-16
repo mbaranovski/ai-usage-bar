@@ -74,6 +74,7 @@ class UsageViewModel: ObservableObject {
 
     // MARK: - Computed Properties
 
+    // Current session (5-hour window)
     var fiveHourUtilization: Double {
         usageResponse?.fiveHour?.utilization ?? 0
     }
@@ -82,6 +83,7 @@ class UsageViewModel: ObservableObject {
         usageResponse?.fiveHour?.formattedTimeRemaining ?? "--"
     }
 
+    // Current week (all models)
     var sevenDayUtilization: Double {
         usageResponse?.sevenDay?.utilization ?? 0
     }
@@ -91,6 +93,43 @@ class UsageViewModel: ObservableObject {
             return "--"
         }
         return date.formattedDateTime()
+    }
+
+    // MARK: - Sonnet Properties
+
+    var sonnetUtilization: Double {
+        usageResponse?.sevenDaySonnet?.utilization ?? 0
+    }
+
+    var sonnetResetsAt: String {
+        guard let date = usageResponse?.sevenDaySonnet?.resetsAtDate else {
+            return "--"
+        }
+        return date.formattedResetTime()
+    }
+
+    // MARK: - Extra Usage Properties
+
+    var extraUsageUtilization: Double {
+        usageResponse?.extraUsage?.utilization ?? 0
+    }
+
+    var extraUsageSpent: String {
+        guard let extra = usageResponse?.extraUsage, extra.isEnabled else {
+            return "--"
+        }
+        return String(format: "$%.2f", extra.spentDollars)
+    }
+
+    var extraUsageLimit: String {
+        guard let extra = usageResponse?.extraUsage, extra.isEnabled else {
+            return "--"
+        }
+        return String(format: "$%.2f", extra.limitDollars)
+    }
+
+    var extraUsageIsEnabled: Bool {
+        usageResponse?.extraUsage?.isEnabled ?? false
     }
 
     var menuBarText: String {
