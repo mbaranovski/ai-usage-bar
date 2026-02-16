@@ -12,7 +12,7 @@ let package = Package(
     targets: [
         .executableTarget(
             name: "AISubscriptionUsage",
-            path: "Sources/ClaudeUsage"
+            path: "Sources/AISubscriptionUsage"
         )
     ]
 )

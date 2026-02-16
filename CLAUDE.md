@@ -24,8 +24,8 @@ swift build -c release
 MVVM pattern with the following structure:
 
 ```
-Sources/ClaudeUsage/
-├── ClaudeUsageApp.swift      # @main entry point, MenuBarExtra setup
+Sources/AISubscriptionUsage/
+├── AISubscriptionUsageApp.swift      # @main entry point, MenuBarExtra setup
 ├── ViewModels/
 │   └── UsageViewModel.swift  # ObservableObject, manages state & auto-refresh
 ├── Views/
@@ -64,4 +64,4 @@ Sources/ClaudeUsage/
 ## Resources
 
 - `Resources/Info.plist` - App bundle configuration
-- `Resources/ClaudeUsage.entitlements` - App sandbox entitlements
+- `Resources/AISubscriptionUsage.entitlements` - App sandbox entitlements
