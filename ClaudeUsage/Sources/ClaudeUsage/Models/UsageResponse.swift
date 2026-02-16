@@ -2,20 +2,6 @@
 
 import Foundation
 
-struct UsageResponse: Codable {
-    let fiveHour: UsageWindow?
-    let sevenDay: UsageWindow?
-    let sevenDayOauthApps: UsageWindow?
-    let sevenDayOpus: UsageWindow?
-
-    enum CodingKeys: String, CodingKey {
-        case fiveHour = "five_hour"
-        case sevenDay = "seven_day"
-        case sevenDayOauthApps = "seven_day_oauth_apps"
-        case sevenDayOpus = "seven_day_opus"
-    }
-}
-
 struct UsageWindow: Codable {
     let utilization: Double
     let resetsAt: String?
@@ -47,6 +33,46 @@ struct UsageWindow: Codable {
             return "\(hours)h \(minutes)m"
         }
         return "\(minutes)m"
+    }
+}
+
+struct ExtraUsage: Codable {
+    let isEnabled: Bool
+    let monthlyLimit: Int
+    let usedCredits: Double
+    let utilization: Double
+
+    enum CodingKeys: String, CodingKey {
+        case isEnabled = "is_enabled"
+        case monthlyLimit = "monthly_limit"
+        case usedCredits = "used_credits"
+        case utilization
+    }
+
+    var spentDollars: Double {
+        Double(usedCredits) / 100.0
+    }
+
+    var limitDollars: Double {
+        Double(monthlyLimit) / 100.0
+    }
+}
+
+struct UsageResponse: Codable {
+    let fiveHour: UsageWindow?
+    let sevenDay: UsageWindow?
+    let sevenDaySonnet: UsageWindow?
+    let sevenDayOauthApps: UsageWindow?
+    let sevenDayOpus: UsageWindow?
+    let extraUsage: ExtraUsage?
+
+    enum CodingKeys: String, CodingKey {
+        case fiveHour = "five_hour"
+        case sevenDay = "seven_day"
+        case sevenDaySonnet = "seven_day_sonnet"
+        case sevenDayOauthApps = "seven_day_oauth_apps"
+        case sevenDayOpus = "seven_day_opus"
+        case extraUsage = "extra_usage"
     }
 }
 
