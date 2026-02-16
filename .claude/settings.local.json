@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(head:*)",
+      "Bash(security find-generic-password:*)",
+      "Bash(swift package init:*)",
+      "Bash(git init:*)",
+      "Bash(swift build:*)"
+    ]
+  }
+}
