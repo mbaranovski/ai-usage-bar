@@ -1,9 +1,9 @@
-// Sources/ClaudeUsage/ClaudeUsageApp.swift
+// Sources/AISubscriptionUsage/AISubscriptionUsageApp.swift
 
 import SwiftUI
 
 @main
-struct ClaudeUsageApp: App {
+struct AISubscriptionUsageApp: App {
     @StateObject private var viewModel = UsageViewModel()
 
     var body: some Scene {

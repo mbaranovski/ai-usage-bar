@@ -1,4 +1,4 @@
-// Sources/ClaudeUsage/ViewModels/UsageViewModel.swift
+// Sources/AISubscriptionUsage/ViewModels/UsageViewModel.swift
 
 import Foundation
 import Combine
@@ -99,7 +99,7 @@ class UsageViewModel: ObservableObject {
         guard let date = usageResponse?.sevenDay?.resetsAtDate else {
             return "--"
         }
-        return date.formattedDateTime()
+        return date.formattedResetTime()
     }
 
     // MARK: - Sonnet Properties
@@ -152,6 +152,48 @@ class UsageViewModel: ObservableObject {
         if utilization >= 80 { return .critical }
         if utilization >= 50 { return .warning }
         return .normal
+    }
+
+    // MARK: - Error Properties
+
+    var isAuthError: Bool {
+        guard let serviceError = error as? UsageServiceError else { return false }
+        switch serviceError {
+        case .noToken, .httpError(401):
+            return true
+        default:
+            return false
+        }
+    }
+
+    var errorTitle: String {
+        guard let serviceError = error as? UsageServiceError else {
+            return "Error"
+        }
+        switch serviceError {
+        case .noToken:
+            return "No Authentication"
+        case .httpError(401):
+            return "Authentication Expired"
+        case .httpError(let code):
+            return "HTTP Error (\(code))"
+        case .networkError:
+            return "Network Error"
+        case .invalidResponse:
+            return "Invalid Response"
+        }
+    }
+
+    var errorMessage: String {
+        guard let serviceError = error as? UsageServiceError else {
+            return error?.localizedDescription ?? "Unknown error"
+        }
+        switch serviceError {
+        case .noToken, .httpError(401):
+            return "Please sign in using the Claude Code CLI:\n\nclaude login"
+        default:
+            return serviceError.errorDescription ?? "Unknown error"
+        }
     }
 
     var lastUpdatedText: String {

@@ -1,4 +1,4 @@
-// Sources/ClaudeUsage/Models/UsageResponse.swift
+// Sources/AISubscriptionUsage/Models/UsageResponse.swift
 
 import Foundation
 

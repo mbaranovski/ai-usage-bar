@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:AISubscriptionUsage}",
+            "name": "Debug AISubscriptionUsage",
+            "target": "AISubscriptionUsage",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug AISubscriptionUsage"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:AISubscriptionUsage}",
+            "name": "Release AISubscriptionUsage",
+            "target": "AISubscriptionUsage",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release AISubscriptionUsage"
+        }
+    ]
+}

@@ -1,4 +1,4 @@
-// Sources/ClaudeUsage/Utilities/DateExtensions.swift
+// Sources/AISubscriptionUsage/Utilities/DateExtensions.swift
 
 import Foundation
 

@@ -1,4 +1,4 @@
-// Sources/ClaudeUsage/Views/MenuBarLabelView.swift
+// Sources/AISubscriptionUsage/Views/MenuBarLabelView.swift
 
 import SwiftUI
 

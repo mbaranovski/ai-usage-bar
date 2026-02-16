@@ -1,4 +1,4 @@
-// Sources/ClaudeUsage/Services/LaunchAtLoginManager.swift
+// Sources/AISubscriptionUsage/Services/LaunchAtLoginManager.swift
 
 import Foundation
 import ServiceManagement

@@ -1,4 +1,4 @@
-// Sources/ClaudeUsage/Services/KeychainService.swift
+// Sources/AISubscriptionUsage/Services/KeychainService.swift
 
 import Foundation
 import Security

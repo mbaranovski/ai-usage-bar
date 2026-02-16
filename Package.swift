@@ -2,16 +2,16 @@
 import PackageDescription
 
 let package = Package(
-    name: "ClaudeUsage",
+    name: "AISubscriptionUsage",
     platforms: [
         .macOS(.v13)
     ],
     products: [
-        .executable(name: "ClaudeUsage", targets: ["ClaudeUsage"])
+        .executable(name: "AISubscriptionUsage", targets: ["AISubscriptionUsage"])
     ],
     targets: [
         .executableTarget(
-            name: "ClaudeUsage",
+            name: "AISubscriptionUsage",
             path: "Sources/ClaudeUsage"
         )
     ]

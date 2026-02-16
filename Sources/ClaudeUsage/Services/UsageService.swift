@@ -1,4 +1,4 @@
-// Sources/ClaudeUsage/Services/UsageService.swift
+// Sources/AISubscriptionUsage/Services/UsageService.swift
 
 import Foundation
 
