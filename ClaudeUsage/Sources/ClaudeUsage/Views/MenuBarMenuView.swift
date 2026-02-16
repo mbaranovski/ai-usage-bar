@@ -47,7 +47,7 @@ struct MenuBarMenuView: View {
                 usageSection(
                     title: "Current session",
                     utilization: viewModel.fiveHourUtilization,
-                    resetInfo: viewModel.fiveHourTimeRemaining,
+                    resetInfo: viewModel.fiveHourTimeRemainingFormatted,
                     level: viewModel.utilizationColor
                 )
 
