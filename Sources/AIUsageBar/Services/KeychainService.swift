@@ -23,7 +23,13 @@ enum KeychainError: Error, LocalizedError {
     }
 }
 
-class KeychainService {
+protocol CredentialProvider {
+    func getCredentials() throws -> Credentials
+    func getAccessToken() throws -> String
+    func clearCache()
+}
+
+class KeychainService: CredentialProvider {
     static let shared = KeychainService()
 
     private let service = "Claude Code-credentials"
