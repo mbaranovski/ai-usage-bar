@@ -1,10 +1,16 @@
 # AI Usage Bar
 
-A native macOS menu bar app that displays Claude Code subscription usage limits in real-time.
+A native macOS menu bar app that displays Claude Code(for now) subscription usage limits in real-time.
 
 ![macOS](https://img.shields.io/badge/macOS-13.0%2B-blue)
 ![Swift](https://img.shields.io/badge/Swift-5.9-orange)
 ![License](https://img.shields.io/badge/License-MIT-green)
+
+## Preview
+
+<p align="center">
+  <img src="docs/screenshots/app_preview.gif" alt="App Preview" width="320">
+</p>
 
 ## Features
 
