@@ -27,10 +27,16 @@ class KeychainService {
     static let shared = KeychainService()
 
     private let service = "Claude Code-credentials"
+    private var cachedCredentials: Credentials?
 
     private init() {}
 
     func getCredentials() throws -> Credentials {
+        // Return cached credentials if available
+        if let cached = cachedCredentials {
+            return cached
+        }
+
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
@@ -54,6 +60,7 @@ class KeychainService {
 
         do {
             let credentials = try JSONDecoder().decode(Credentials.self, from: data)
+            cachedCredentials = credentials  // Cache for future use
             return credentials
         } catch {
             throw KeychainError.decodingError(error)
@@ -63,5 +70,9 @@ class KeychainService {
     func getAccessToken() throws -> String {
         let credentials = try getCredentials()
         return credentials.claudeAiOauth.accessToken
+    }
+
+    func clearCache() {
+        cachedCredentials = nil
     }
 }

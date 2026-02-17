@@ -35,10 +35,7 @@ class UsageService {
         self.session = URLSession(configuration: config)
     }
 
-    func fetchUsage() async throws -> UsageResponse {
-        // Get token from keychain
-        let token = try KeychainService.shared.getAccessToken()
-
+    func fetchUsage(token: String) async throws -> UsageResponse {
         var request = URLRequest(url: apiURL)
         request.httpMethod = "GET"
         request.setValue("application/json, text/plain, */*", forHTTPHeaderField: "Accept")

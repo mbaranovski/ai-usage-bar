@@ -35,14 +35,20 @@ class UsageViewModel: ObservableObject {
         error = nil
 
         do {
-            // Get subscription type from credentials
+            // Get credentials from keychain (single access)
             let credentials = try KeychainService.shared.getCredentials()
             subscriptionType = credentials.claudeAiOauth.subscriptionType?.capitalized ?? "Unknown"
 
-            // Fetch usage data
-            let response = try await UsageService.shared.fetchUsage()
+            // Fetch usage data with token from credentials
+            let response = try await UsageService.shared.fetchUsage(token: credentials.claudeAiOauth.accessToken)
             usageResponse = response
             lastUpdated = Date()
+        } catch let error as UsageServiceError {
+            // Clear cached credentials on auth error so next refresh fetches fresh ones
+            if case .httpError(401) = error {
+                KeychainService.shared.clearCache()
+            }
+            self.error = error
         } catch {
             self.error = error
         }
