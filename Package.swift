@@ -2,17 +2,22 @@
 import PackageDescription
 
 let package = Package(
-    name: "AISubscriptionUsage",
+    name: "AIUsageBar",
     platforms: [
         .macOS(.v13)
     ],
     products: [
-        .executable(name: "AISubscriptionUsage", targets: ["AISubscriptionUsage"])
+        .executable(name: "AIUsageBar", targets: ["AIUsageBar"])
     ],
     targets: [
         .executableTarget(
-            name: "AISubscriptionUsage",
-            path: "Sources/AISubscriptionUsage"
+            name: "AIUsageBar",
+            path: "Sources/AIUsageBar"
+        ),
+        .testTarget(
+            name: "AIUsageBarTests",
+            dependencies: ["AIUsageBar"],
+            path: "Tests/AIUsageBarTests"
         )
     ]
 )

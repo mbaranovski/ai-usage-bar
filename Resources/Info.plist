@@ -7,13 +7,13 @@
     <key>CFBundleExecutable</key>
     <string>$(EXECUTABLE_NAME)</string>
     <key>CFBundleIdentifier</key>
-    <string>com.aisubscriptionusage.app</string>
+    <string>com.github.mbaranovski.AIUsageBar</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>AI Subscription Usage</string>
+    <string>AI Usage Bar</string>
     <key>CFBundleIconFile</key>
-    <string>AISubscriptionUsage</string>
+    <string>AIUsageBar</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>

@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Build script for creating AISubscriptionUsage.app bundle
+# Build script for creating AIUsageBar.app bundle
 # Usage: ./build-app.sh [--sign]
 
 set -e
 
-APP_NAME="AISubscriptionUsage"
+APP_NAME="AIUsageBar"
 APP_BUNDLE="${APP_NAME}.app"
 CONTENTS_DIR="${APP_BUNDLE}/Contents"
 MACOS_DIR="${CONTENTS_DIR}/MacOS"

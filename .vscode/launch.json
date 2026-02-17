@@ -4,21 +4,21 @@
             "type": "swift",
             "request": "launch",
             "args": [],
-            "cwd": "${workspaceFolder:AISubscriptionUsage}",
-            "name": "Debug AISubscriptionUsage",
-            "target": "AISubscriptionUsage",
+            "cwd": "${workspaceFolder:AIUsageBar}",
+            "name": "Debug AIUsageBar",
+            "target": "AIUsageBar",
             "configuration": "debug",
-            "preLaunchTask": "swift: Build Debug AISubscriptionUsage"
+            "preLaunchTask": "swift: Build Debug AIUsageBar"
         },
         {
             "type": "swift",
             "request": "launch",
             "args": [],
-            "cwd": "${workspaceFolder:AISubscriptionUsage}",
-            "name": "Release AISubscriptionUsage",
-            "target": "AISubscriptionUsage",
+            "cwd": "${workspaceFolder:AIUsageBar}",
+            "name": "Release AIUsageBar",
+            "target": "AIUsageBar",
             "configuration": "release",
-            "preLaunchTask": "swift: Build Release AISubscriptionUsage"
+            "preLaunchTask": "swift: Build Release AIUsageBar"
         }
     ]
 }

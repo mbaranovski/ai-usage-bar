@@ -16,7 +16,7 @@ swift build
 swift build -c release
 
 # Run the app
-.build/release/AISubscriptionUsage
+.build/release/AIUsageBar
 ```
 
 ## Architecture
@@ -24,8 +24,8 @@ swift build -c release
 MVVM pattern with the following structure:
 
 ```
-Sources/AISubscriptionUsage/
-├── AISubscriptionUsageApp.swift      # @main entry point, MenuBarExtra setup
+Sources/AIUsageBar/
+├── AIUsageBarApp.swift      # @main entry point, MenuBarExtra setup
 ├── ViewModels/
 │   └── UsageViewModel.swift  # ObservableObject, manages state & auto-refresh
 ├── Views/
@@ -64,4 +64,4 @@ Sources/AISubscriptionUsage/
 ## Resources
 
 - `Resources/Info.plist` - App bundle configuration
-- `Resources/AISubscriptionUsage.entitlements` - App sandbox entitlements
+- `Resources/AIUsageBar.entitlements` - App sandbox entitlements
