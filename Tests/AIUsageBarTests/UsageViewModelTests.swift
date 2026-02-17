@@ -5,7 +5,7 @@ import XCTest
 
 // MARK: - Mocks
 
-class MockCredentialProvider: CredentialProvider {
+final class MockCredentialProvider: CredentialProvider, @unchecked Sendable {
     var credentials: Credentials?
     var error: Error?
     var clearCacheCalled = false
@@ -25,7 +25,7 @@ class MockCredentialProvider: CredentialProvider {
     }
 }
 
-class MockUsageService: UsageFetching {
+final class MockUsageService: UsageFetching, @unchecked Sendable {
     var response: UsageResponse?
     var error: Error?
 

@@ -58,7 +58,7 @@ Sources/AIUsageBar/
 ## Requirements
 
 - macOS 13.0+ (Ventura)
-- Swift 5.9
+- Swift 6.0+
 - Claude Code CLI must be authenticated (`claude login`)
 
 ## Resources

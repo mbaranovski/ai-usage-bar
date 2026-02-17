@@ -22,11 +22,11 @@ enum UsageServiceError: Error, LocalizedError {
     }
 }
 
-protocol UsageFetching {
+protocol UsageFetching: Sendable {
     func fetchUsage(token: String) async throws -> UsageResponse
 }
 
-class UsageService: UsageFetching {
+final class UsageService: UsageFetching, @unchecked Sendable {
     static let shared = UsageService()
 
     private let apiURL: URL
