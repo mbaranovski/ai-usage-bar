@@ -12,12 +12,19 @@ class UsageViewModel: ObservableObject {
     @Published var lastUpdated: Date?
     @Published var subscriptionType: String?
 
+    // Dependencies
+    private let credentialProvider: CredentialProvider
+    private let usageService: UsageFetching
+
     // Task for auto-refresh using async sequence
     // nonisolated(unsafe) is safe here because Task.cancel() is thread-safe
     nonisolated(unsafe) private var refreshTask: Task<Void, Never>?
     private let refreshInterval: TimeInterval = 60 // 1 minute
 
-    init() {
+    init(credentialProvider: CredentialProvider = KeychainService.shared,
+         usageService: UsageFetching = UsageService.shared) {
+        self.credentialProvider = credentialProvider
+        self.usageService = usageService
         startAutoRefresh()
     }
 
@@ -36,17 +43,17 @@ class UsageViewModel: ObservableObject {
 
         do {
             // Get credentials from keychain (single access)
-            let credentials = try KeychainService.shared.getCredentials()
+            let credentials = try credentialProvider.getCredentials()
             subscriptionType = credentials.claudeAiOauth.subscriptionType?.capitalized ?? "Unknown"
 
             // Fetch usage data with token from credentials
-            let response = try await UsageService.shared.fetchUsage(token: credentials.claudeAiOauth.accessToken)
+            let response = try await usageService.fetchUsage(token: credentials.claudeAiOauth.accessToken)
             usageResponse = response
             lastUpdated = Date()
         } catch let error as UsageServiceError {
             // Clear cached credentials on auth error so next refresh fetches fresh ones
             if case .httpError(401) = error {
-                KeychainService.shared.clearCache()
+                credentialProvider.clearCache()
             }
             self.error = error
         } catch {
