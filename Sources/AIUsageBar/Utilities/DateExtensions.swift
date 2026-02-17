@@ -3,12 +3,6 @@
 import Foundation
 
 extension Date {
-    func formattedRelative() -> String {
-        let formatter = RelativeDateTimeFormatter()
-        formatter.unitsStyle = .abbreviated
-        return formatter.localizedString(for: self, relativeTo: Date())
-    }
-
     func formattedDateTime() -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
@@ -53,11 +47,20 @@ extension Date {
         let now = Date()
 
         // Get first day of next month
-        let components = calendar.dateComponents([.year, .month], from: now)
-        var nextMonth = components
-        nextMonth.month! += 1
+        guard let currentMonth = calendar.dateComponents([.year, .month], from: now).month,
+              let currentYear = calendar.dateComponents([.year, .month], from: now).year else {
+            return ""
+        }
 
-        guard let resetDate = calendar.date(from: nextMonth) else {
+        let nextMonthValue = currentMonth == 12 ? 1 : currentMonth + 1
+        let nextYearValue = currentMonth == 12 ? currentYear + 1 : currentYear
+
+        var nextMonthComponents = DateComponents()
+        nextMonthComponents.year = nextYearValue
+        nextMonthComponents.month = nextMonthValue
+        nextMonthComponents.day = 1
+
+        guard let resetDate = calendar.date(from: nextMonthComponents) else {
             return ""
         }
 

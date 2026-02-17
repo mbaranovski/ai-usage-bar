@@ -25,15 +25,22 @@ enum UsageServiceError: Error, LocalizedError {
 class UsageService {
     static let shared = UsageService()
 
-    private let apiURL = URL(string: "https://api.anthropic.com/api/oauth/usage")!
+    private let apiURL: URL
     private let session: URLSession
 
     private init() {
+        // Safe URL initialization - this is a compile-time constant URL that will always succeed
+        guard let url = URL(string: "https://api.anthropic.com/api/oauth/usage") else {
+            fatalError("Invalid API URL configuration")
+        }
+        self.apiURL = url
+
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 30
         config.waitsForConnectivity = true
         self.session = URLSession(configuration: config)
     }
+
 
     func fetchUsage(token: String) async throws -> UsageResponse {
         var request = URLRequest(url: apiURL)

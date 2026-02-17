@@ -24,7 +24,9 @@ class LaunchAtLoginManager: ObservableObject {
                 try SMAppService.mainApp.unregister()
             }
         } catch {
-            print("Failed to update launch at login: \(error)")
+            // Silently handle launch at login registration errors
+            // Revert state to reflect actual status
+            isEnabled = SMAppService.mainApp.status == .enabled
         }
     }
 }

@@ -60,12 +60,6 @@ struct MenuBarMenuView: View {
                         .animation(.easeInOut(duration: 0.2), value: isClaudeExpanded)
                     Spacer()
                 }
-                // .padding(.horizontal, 8)
-                // .background(
-                //     RoundedRectangle(cornerRadius: 4)
-                //         .fill(isClaudeHovered ? Color.accentColor : (isClaudeExpanded ? Color.primary.opacity(0.1) : Color.clear))
-                // )
-                // .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .onHover { hovering in
@@ -184,25 +178,7 @@ struct MenuBarMenuView: View {
     }
 
     private var extraUsageResetDate: String {
-        let timeZone = TimeZone.current
-        let timeZoneName = timeZone.identifier
-
-        let calendar = Calendar.current
-        let now = Date()
-
-        let components = calendar.dateComponents([.year, .month], from: now)
-        var nextMonth = components
-        nextMonth.month! += 1
-
-        guard let resetDate = calendar.date(from: nextMonth) else {
-            return "--"
-        }
-
-        let formatter = DateFormatter()
-        formatter.timeZone = timeZone
-        formatter.dateFormat = "MMM d"
-
-        return "Resets \(formatter.string(from: resetDate)) (\(timeZoneName))"
+        Date().formattedMonthlyReset()
     }
 
     private func usageSection(title: String, utilization: Double, resetInfo: String, level: UtilizationLevel) -> some View {
