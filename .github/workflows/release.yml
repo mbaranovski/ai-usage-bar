@@ -1,0 +1,25 @@
+name: Build and Release
+
+on:
+  release:
+    types: [created]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build app bundle
+        run: chmod +x build-app.sh && ./build-app.sh
+
+      - name: Create zip archive
+        run: ditto -c -k --sequesterRsrc --keepParent AIUsageBar.app AIUsageBar.app.zip
+
+      - name: Upload release artifact
+        uses: softprops/action-gh-release@v2
+        with:
+          files: AIUsageBar.app.zip
