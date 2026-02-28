@@ -64,7 +64,9 @@ final class UsageService: UsageFetching, @unchecked Sendable {
             let (data, response) = try await session.data(for: request)
 
             guard let httpResponse = response as? HTTPURLResponse else {
+                #if DEBUG
                 print("[UsageService] ERROR: Response is not HTTPURLResponse")
+                #endif
                 throw UsageServiceError.invalidResponse
             }
 
