@@ -55,22 +55,69 @@ final class UsageService: UsageFetching, @unchecked Sendable {
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.setValue("oauth-2025-04-20", forHTTPHeaderField: "anthropic-beta")
 
+        #if DEBUG
+        print("[UsageService] Fetching usage from: \(apiURL)")
+        print("[UsageService] Token prefix: \(String(token.prefix(10)))...")
+        #endif
+
         do {
             let (data, response) = try await session.data(for: request)
 
             guard let httpResponse = response as? HTTPURLResponse else {
+                #if DEBUG
+                print("[UsageService] ERROR: Response is not HTTPURLResponse")
+                #endif
                 throw UsageServiceError.invalidResponse
             }
+
+            #if DEBUG
+            print("[UsageService] HTTP Status: \(httpResponse.statusCode)")
+            print("[UsageService] Response headers: \(httpResponse.allHeaderFields)")
+            if let bodyString = String(data: data, encoding: .utf8) {
+                print("[UsageService] Response body (\(data.count) bytes):\n\(bodyString)")
+            } else {
+                print("[UsageService] Response body: \(data.count) bytes (not UTF-8)")
+            }
+            #endif
 
             guard httpResponse.statusCode == 200 else {
                 throw UsageServiceError.httpError(httpResponse.statusCode)
             }
 
-            let usageResponse = try JSONDecoder().decode(UsageResponse.self, from: data)
-            return usageResponse
+            do {
+                let usageResponse = try JSONDecoder().decode(UsageResponse.self, from: data)
+                #if DEBUG
+                print("[UsageService] Successfully decoded UsageResponse")
+                #endif
+                return usageResponse
+            } catch let decodingError {
+                #if DEBUG
+                print("[UsageService] DECODING ERROR: \(decodingError)")
+                if let decodingError = decodingError as? DecodingError {
+                    switch decodingError {
+                    case .keyNotFound(let key, let context):
+                        print("[UsageService]   Missing key: '\(key.stringValue)' at path: \(context.codingPath.map(\.stringValue).joined(separator: "."))")
+                    case .typeMismatch(let type, let context):
+                        print("[UsageService]   Type mismatch: expected \(type) at path: \(context.codingPath.map(\.stringValue).joined(separator: "."))")
+                        print("[UsageService]   Debug description: \(context.debugDescription)")
+                    case .valueNotFound(let type, let context):
+                        print("[UsageService]   Value not found: expected \(type) at path: \(context.codingPath.map(\.stringValue).joined(separator: "."))")
+                    case .dataCorrupted(let context):
+                        print("[UsageService]   Data corrupted at path: \(context.codingPath.map(\.stringValue).joined(separator: "."))")
+                        print("[UsageService]   Debug description: \(context.debugDescription)")
+                    @unknown default:
+                        print("[UsageService]   Unknown decoding error")
+                    }
+                }
+                #endif
+                throw UsageServiceError.networkError(decodingError)
+            }
         } catch let error as UsageServiceError {
             throw error
         } catch {
+            #if DEBUG
+            print("[UsageService] NETWORK ERROR: \(error)")
+            #endif
             throw UsageServiceError.networkError(error)
         }
     }

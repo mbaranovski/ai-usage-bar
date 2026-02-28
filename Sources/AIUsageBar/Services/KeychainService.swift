@@ -40,8 +40,15 @@ final class KeychainService: CredentialProvider, @unchecked Sendable {
     func getCredentials() throws -> Credentials {
         // Return cached credentials if available
         if let cached = cachedCredentials {
+            #if DEBUG
+            print("[KeychainService] Using cached credentials")
+            #endif
             return cached
         }
+
+        #if DEBUG
+        print("[KeychainService] Querying keychain for service: '\(service)'")
+        #endif
 
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
@@ -55,20 +62,43 @@ final class KeychainService: CredentialProvider, @unchecked Sendable {
 
         guard status == errSecSuccess else {
             if status == errSecItemNotFound {
+                #if DEBUG
+                print("[KeychainService] ERROR: Credentials not found in keychain")
+                #endif
                 throw KeychainError.itemNotFound
             }
+            #if DEBUG
+            print("[KeychainService] ERROR: Keychain status \(status)")
+            #endif
             throw KeychainError.unexpectedStatus(status)
         }
 
         guard let data = result as? Data else {
+            #if DEBUG
+            print("[KeychainService] ERROR: Result is not Data")
+            #endif
             throw KeychainError.invalidData
         }
 
+        #if DEBUG
+        if let rawString = String(data: data, encoding: .utf8) {
+            print("[KeychainService] Raw keychain data (\(data.count) bytes):\n\(rawString)")
+        }
+        #endif
+
         do {
             let credentials = try JSONDecoder().decode(Credentials.self, from: data)
+            #if DEBUG
+            print("[KeychainService] Successfully decoded credentials")
+            print("[KeychainService] Token prefix: \(String(credentials.claudeAiOauth.accessToken.prefix(10)))...")
+            print("[KeychainService] Subscription type: \(credentials.claudeAiOauth.subscriptionType ?? "nil")")
+            #endif
             cachedCredentials = credentials  // Cache for future use
             return credentials
         } catch {
+            #if DEBUG
+            print("[KeychainService] DECODING ERROR: \(error)")
+            #endif
             throw KeychainError.decodingError(error)
         }
     }
