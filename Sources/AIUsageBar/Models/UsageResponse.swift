@@ -38,9 +38,9 @@ struct UsageWindow: Codable {
 
 struct ExtraUsage: Codable {
     let isEnabled: Bool
-    let monthlyLimit: Int
-    let usedCredits: Double
-    let utilization: Double
+    let monthlyLimit: Int?
+    let usedCredits: Double?
+    let utilization: Double?
 
     enum CodingKeys: String, CodingKey {
         case isEnabled = "is_enabled"
@@ -50,11 +50,11 @@ struct ExtraUsage: Codable {
     }
 
     var spentDollars: Double {
-        Double(usedCredits) / 100.0
+        Double(usedCredits ?? 0) / 100.0
     }
 
     var limitDollars: Double {
-        Double(monthlyLimit) / 100.0
+        Double(monthlyLimit ?? 0) / 100.0
     }
 }
 
