@@ -12,8 +12,6 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-tags: true
 
       - name: Set up Swift 6.2.3
         uses: swift-actions/setup-swift@v2
