@@ -12,6 +12,8 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-tags: true
 
       - name: Set up Swift 6.2.3
         uses: swift-actions/setup-swift@v2
@@ -27,4 +29,5 @@ jobs:
       - name: Upload release artifact
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.event.release.tag_name }}
           files: AIUsageBar.app.zip
