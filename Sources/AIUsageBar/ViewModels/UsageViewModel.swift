@@ -19,7 +19,7 @@ class UsageViewModel: ObservableObject {
     // Task for auto-refresh using async sequence
     // nonisolated(unsafe) is safe here because Task.cancel() is thread-safe
     nonisolated(unsafe) private var refreshTask: Task<Void, Never>?
-    private let refreshInterval: TimeInterval = 120 // 1 minute
+    private let refreshInterval: TimeInterval = 180 // 3 minutes
 
     init(credentialProvider: CredentialProvider = KeychainService.shared,
          usageService: UsageFetching = UsageService.shared) {
@@ -74,7 +74,7 @@ class UsageViewModel: ObservableObject {
             // Periodic refresh using async sequence
             while !Task.isCancelled {
                 do {
-                    try await Task.sleep(for: .seconds(self?.refreshInterval ?? 60))
+                    try await Task.sleep(for: .seconds(self?.refreshInterval ?? 180))
                     guard !Task.isCancelled else { break }
                     await self?.refresh()
                 } catch {
